@@ -134,3 +134,11 @@ def planet_position(planet, jd):
     ecx, ecy, ecz = ecliptic_coordinates(ox, oy, perihelion, planet.longitude_ascending(jd), planet.inclination(jd))
     return ecx, ecy, ecz
     #return equatorial_coordinates(ecx, ecy, ecz, 24)
+
+def planet_ellipse(planet, jd):
+    eccentricity = planet.eccentricity(jd)
+    smajor = planet.semi_major_axis(jd)
+    sminor = smajor * math.sqrt(1 - (eccentricity ** 2))
+    center = smajor * eccentricity
+    return smajor * 2, sminor * 2, center
+    
