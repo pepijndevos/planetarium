@@ -130,7 +130,7 @@ def planet_position(planet, jd):
     eccentric_anomaly = solve_kepler(planet.eccentricity(jd), mean_anomaly)
 
     ox, oy = orbital_coordinates(planet.semi_major_axis(jd), planet.eccentricity(jd), eccentric_anomaly)
-    return ox, oy, 0
+    #return ox, oy, 0
     ecx, ecy, ecz = ecliptic_coordinates(ox, oy, perihelion, planet.longitude_ascending(jd), planet.inclination(jd))
     return ecx, ecy, ecz
-    return equatorial_coordinates(ecx, ecy, ecz, planet.inclination(jd))
+    #return equatorial_coordinates(ecx, ecy, ecz, 24)

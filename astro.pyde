@@ -23,9 +23,8 @@ symbols = {
 }
 
 def setup():
-    global sun, bgimg
+    global bgimg
     size(800, 800, P3D)
-    #shapeMode(CENTER)
     freesans = createFont("FreeSans", 32);
     textFont(freesans);
     
@@ -41,21 +40,13 @@ def draw():
         fill(0)
         ellipse(100, 100, 0, 0)
     
-        #pointLight(255, 230, 200, 0, 0, 0);
-        #ambientLight(50,50,50);
         points = [(symbols['Sun'], width/2, height/2)]
         for p in planets:
             eqx, eqy, eqz = planet_position(p, jd)
                             
-            x = screenX(eqx*zoom, eqy*zoom, eqz*zoom)
-            y = screenY(eqx*zoom, eqy*zoom, eqz*zoom)
+            x = screenX(-eqx*zoom, eqy*zoom, eqz*zoom)
+            y = screenY(-eqx*zoom, eqy*zoom, eqz*zoom)
             points.append((symbols[p.name], x, y))
-
-    with pushMatrix():
-        #translate(width/2, height/2)
-        #translate(-points[center][1], -points[center][2])
-        for p in points:
-            text(p[0], p[1], p[2])
             
     with pushMatrix():
         sphereDetail(30)
@@ -65,11 +56,15 @@ def draw():
         rotateX(xview+(math.pi/2))
         rotateY(yview)
 
-        #noStroke()
+        noStroke()
+        noFill()
         shape(backdrop)
         #sphere(200)
     
-    fill(0);
+    with pushMatrix():
+        for p in points:
+            text(p[0], p[1], p[2])
+
     jd += speed
 
 def mouseDragged(event):
