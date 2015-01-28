@@ -23,7 +23,7 @@ symbols = {
 }
 
 signs = u"\u2648\u2649\u264A\u264B\u264C\u264D\u264E\u264F\u2650\u2651\u2652\u2653"
-#signs = 'abcdefghijkl'
+colors = [(255, 0, 0), (0, 0, 0), (0, 255, 0), (0, 0, 255)]
 
 def setup():
     size(800, 800, P3D)
@@ -84,11 +84,13 @@ def draw():
         for p in points:
             text(p[0], p[1], p[2])
         
-        for sign in signpos:
+        for num, sign in enumerate(signpos):
+            fill(*colors[num%4])
             text(*sign)
             
         textSize(14)
         textAlign(TOP)
+        fill(0)
         text("Julian date: %f" % jd, 20, 20)
 
     jd += speed
