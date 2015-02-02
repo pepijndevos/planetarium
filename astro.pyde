@@ -39,21 +39,22 @@ def draw():
         translate(width/2, height/2)
         rotateX(xview)
         rotateZ(yview)
-        ox, oy, oz = planet_position(planets[center], jd)
-        x = screenX(ox*zoom, -oy*zoom, -oz*zoom)
-        y = screenY(ox*zoom, -oy*zoom, -oz*zoom)
-        points = [(symbols['Sun'], x, y)]
+        #ox, oy, oz = planet_position(planets[center], jd)
+        #x = screenX(ox*zoom, -oy*zoom, -oz*zoom)
+        #y = screenY(ox*zoom, -oy*zoom, -oz*zoom)
+        points = [(symbols['Sun'], width/2, height/2)]
         for p in planets:
-            eqx, eqy, eqz = planet_position(p, jd)
-            h, w, c = planet_ellipse(p, jd)
+            with pushMatrix():
+                eqx, eqy, eqz = planet_position(p, jd)
+                h, w, c = planet_ellipse(p, jd)
 
-            #noFill()
-            #stroke(0)
-            #ellipse(c*zoom, 0, h*zoom, w*zoom)
+                noFill()
+                stroke(0)
+                ellipse(c*zoom, 0, h*zoom, w*zoom)
 
-            x = screenX(-(eqx-ox)*zoom, (eqy-oy)*zoom, (eqz-oz)*zoom)
-            y = screenY(-(eqx-ox)*zoom, (eqy-oy)*zoom, (eqz-oz)*zoom)
-            points.append((symbols[p.name], x, y))
+                x = screenX(-eqx*zoom, eqy*zoom, eqz*zoom)
+                y = screenY(-eqx*zoom, eqy*zoom, eqz*zoom)
+                points.append((symbols[p.name], x, y))
         
         signpos = []
         rotateZ(math.pi/12 - math.pi/2)
