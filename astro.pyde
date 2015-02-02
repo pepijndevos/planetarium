@@ -27,7 +27,6 @@ colors = [(255, 0, 0), (0, 0, 0), (0, 255, 0), (0, 0, 255)]
 
 def setup():
     size(800, 800, P3D)
-    print(PFont.list())
     freesans = createFont("Symbola", 32);
     textFont(freesans);
     
@@ -36,13 +35,17 @@ def draw():
     global jd
     background(255)
     with pushMatrix():
+        eqx, eqy, eqz = planet_position(planets[center], jd)
+        ox = screenX(-eqx*zoom, eqy*zoom, eqz*zoom)
+        oy = screenY(-eqx*zoom, eqy*zoom, eqz*zoom)
+            
+    with pushMatrix():
         translate(width/2, height/2)
         rotateX(xview)
         rotateZ(yview)
-        #ox, oy, oz = planet_position(planets[center], jd)
-        #x = screenX(ox*zoom, -oy*zoom, -oz*zoom)
-        #y = screenY(ox*zoom, -oy*zoom, -oz*zoom)
-        points = [(symbols['Sun'], width/2, height/2)]
+        translate(-ox, -oy)
+
+        points = [(symbols['Sun'], screenX(0, 0, 0), screenY(0, 0, 0))]
         for p in planets:
             with pushMatrix():
                 eqx, eqy, eqz = planet_position(p, jd)
@@ -55,7 +58,11 @@ def draw():
                 x = screenX(-eqx*zoom, eqy*zoom, eqz*zoom)
                 y = screenY(-eqx*zoom, eqy*zoom, eqz*zoom)
                 points.append((symbols[p.name], x, y))
-        
+                
+    with pushMatrix():
+        translate(width/2, height/2)
+        rotateX(xview)
+        rotateZ(yview)
         signpos = []
         rotateZ(math.pi/12 - math.pi/2)
         for s in signs:
@@ -89,7 +96,7 @@ def draw():
             fill(*colors[num%4])
             text(*sign)
             
-        textSize(14)
+        textSize(16)
         textAlign(TOP)
         fill(0)
         text("Julian date: %f" % jd, 20, 20)
