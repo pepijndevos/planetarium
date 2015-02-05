@@ -100,45 +100,18 @@ def orbital_coordinates(semi_major_axis, eccentricity, eccentric_anomaly):
     y = semi_major_axis * math.sqrt(1 - (eccentricity ** 2)) * math.sin(eccentric_anomaly)
     return x, y
 
-def ecliptic_coordinates(orbit_x, orbit_y, perihelion, longitude_ascending, inclination):
-    term1 = math.cos(perihelion) * math.cos(longitude_ascending)
-    term2 = math.sin(perihelion) * math.sin(longitude_ascending) * math.cos(inclination)
-    term3 = math.sin(perihelion) * math.cos(longitude_ascending)
-    term4 = math.cos(perihelion) * math.sin(longitude_ascending) * math.cos(inclination)
-    x = (term1 - term2) * orbit_x + (-term3 - term4) * orbit_y
-
-    term1 = math.cos(perihelion) * math.sin(longitude_ascending)
-    term2 = math.sin(perihelion) * math.cos(longitude_ascending) * math.cos(inclination)
-    term3 = math.sin(perihelion) * math.sin(longitude_ascending)
-    term4 = math.cos(perihelion) * math.cos(longitude_ascending) * math.cos(inclination)
-    y = (term1 + term2) * orbit_x + (-term3 + term4) * orbit_y
-
-    term1 = math.sin(perihelion) * math.sin(inclination)
-    term2 = math.cos(perihelion) * math.sin(inclination)
-    z = term1 * orbit_x + term2 * orbit_y
-
-    return x, y, z
-
-def equatorial_coordinates(ecl_x, ecl_y, ecl_z, inclination):
-    y = (math.cos(inclination) * ecl_y) - (math.sin(inclination) * ecl_z)
-    z = (math.sin(inclination) * ecl_y) + (math.cos(inclination) * ecl_z)
-    return ecl_x, y, z
-
 def planet_position(planet, jd):
     perihelion = planet.longitude_perhelion(jd) - planet.longitude_ascending(jd)
     mean_anomaly = planet.mean_longitude(jd) - planet.longitude_perhelion(jd)
     eccentric_anomaly = solve_kepler(planet.eccentricity(jd), mean_anomaly)
 
-    ox, oy = orbital_coordinates(planet.semi_major_axis(jd), planet.eccentricity(jd), eccentric_anomaly)
-    #return ox, oy, 0
-    #ecx, ecy, ecz = ecliptic_coordinates(ox, oy, perihelion, planet.longitude_ascending(jd), planet.inclination(jd))
-    ecx, ecy, ecz = ecliptic_coordinates(ox, oy, mouseX/100., mouseY/100., planet.inclination(jd))
-    
+    return orbital_coordinates(planet.semi_major_axis(jd), planet.eccentricity(jd), eccentric_anomaly)
+
+def planet_rotation(planet, jd):
+    perihelion = planet.longitude_perhelion(jd) - planet.longitude_ascending(jd)
     rotateZ(-planet.longitude_ascending(jd))
     rotateX(planet.inclination(jd))
     rotateZ(-perihelion)
-    return ox, oy, 0
-    #return equatorial_coordinates(ecx, ecy, ecz, 24)
 
 def planet_ellipse(planet, jd):
     eccentricity = planet.eccentricity(jd)

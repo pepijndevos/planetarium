@@ -1,5 +1,5 @@
 import math
-from nomy import planets, planet_position, planet_ellipse
+from nomy import planets, planet_position, planet_ellipse, planet_rotation
 
 jd = 2448392.79167
 speed = 0
@@ -35,9 +35,10 @@ def draw():
     global jd
     background(255)
     with pushMatrix():
-        eqx, eqy, eqz = planet_position(planets[center], jd)
-        ox = screenX(-eqx*zoom, eqy*zoom, eqz*zoom)
-        oy = screenY(-eqx*zoom, eqy*zoom, eqz*zoom)
+        planet_rotation(planets[center], jd)
+        eqx, eqy = planet_position(planets[center], jd)
+        ox = screenX(-eqx*zoom, eqy*zoom, 0)
+        oy = screenY(-eqx*zoom, eqy*zoom, 0)
             
     with pushMatrix():
         translate(width/2, height/2)
@@ -48,15 +49,16 @@ def draw():
         points = [(symbols['Sun'], screenX(0, 0, 0), screenY(0, 0, 0))]
         for p in planets:
             with pushMatrix():
-                eqx, eqy, eqz = planet_position(p, jd)
+                planet_rotation(p, jd)
+                eqx, eqy = planet_position(p, jd)
                 h, w, c = planet_ellipse(p, jd)
 
                 noFill()
                 stroke(0)
                 ellipse(c*zoom, 0, h*zoom, w*zoom)
 
-                x = screenX(-eqx*zoom, eqy*zoom, eqz*zoom)
-                y = screenY(-eqx*zoom, eqy*zoom, eqz*zoom)
+                x = screenX(-eqx*zoom, eqy*zoom, 0)
+                y = screenY(-eqx*zoom, eqy*zoom, 0)
                 points.append((symbols[p.name], x, y))
                 
     with pushMatrix():
